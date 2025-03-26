@@ -246,8 +246,15 @@ class FoodRecommendationAgent:
                         print(f"🍽️ {final_output['sentiment'].replace('OMIT', '').replace('CONFIRMED', '')}")
                         
                         print("\nMatching Menu Items:")
-                        for item in output_dict['results']:
-                            print("👉 ", item.split(':')[0])
+                        try:
+                            for item in output_dict['results']:
+                                print("👉 ", item[0].split(':')[0])
+                        except AttributeError:
+                            for item in output_dict['results'][0]:
+                                print("👉 ", item[0].split(':')[0])
+                        except Exception as e:
+                            print("error", e)
+                            print("output_dict", output_dict)
                         time.sleep(2.5)
                         break  # Exit the loop after the first confirmed match
                         
