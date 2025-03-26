@@ -219,7 +219,7 @@ class FoodRecommendationAgent:
 
             # Search through restaurants
             print(f"\n🍽️ Checking stores near you...")
-            for i in range(0, min(50, len(restaurants))):  # Limit to first 5 restaurants
+            for i in range(0, min(50, len(restaurants))):  # Limit to first 50 restaurants
                 try:
                     store = list(restaurants.keys())[i]
                     time.sleep(0.5)
@@ -248,22 +248,19 @@ class FoodRecommendationAgent:
                         print("\nMatching Menu Items:")
                         for item in output_dict['results']:
                             print("👉 ", item.split(':')[0])
-                    
-                    # Ask if user wants to cotinue searching
-                        continue_search = input("Do you want to continue searching for a restaurant?").lower()
-                        if continue_search in ['yes', 'y']:
-                            continue
-                        else:
-                            break
+                        time.sleep(2.5)
+                        break  # Exit the loop after the first confirmed match
                         
                 except Exception as e:
-                    self.logger.error(f"Error processing restaurant {store}: {e}")
-
-            # If no matches found
+                    self.logger.error(f"Error checking restaurant {i}: {e}")
+            
             if not matches_found:
-                print("😔 Sorry, I couldn't find a perfect match for your request.")
-                fallback_response = self.generate_conversational_response(cuisine_type)
-                print(f"\n🤖 {fallback_response}")
+                print("😕 Sorry, no matching items were found. Would you like to try again?")
+                continue_search = input("Do you want to continue searching for a restaurant?").lower()
+                if continue_search not in ['yes', 'y']:
+                    print("Thanks for chatting! Enjoy your meal!")
+                    break
+
 
 def main():
     agent = FoodRecommendationAgent()
